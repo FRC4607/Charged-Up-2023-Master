@@ -9,6 +9,8 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -73,6 +75,7 @@ public class DriveTrain extends SubsystemBase {
      // Pushing Drive Encoder Data to the SmartDashboard
     SmartDashboard.putNumber("LeftSensorPosition", m_frontLeftMotor.getSelectedSensorPosition(Constants.EncoderConstants.kPIDLoopIdx));
     SmartDashboard.putNumber("RightSensorPosition", m_frontRightMotor.getSelectedSensorPosition(Constants.EncoderConstants.kPIDLoopIdx));
+    SmartDashboard.putNumber("the", getRobotPitch().getDegrees());
     m_dYawCurrent = m_pigeon.getYaw();
   }
   
@@ -139,4 +142,17 @@ public class DriveTrain extends SubsystemBase {
     m_frontRightMotor.set(ControlMode.PercentOutput, 0);
   }
  
+  /**
+     * Gets the pitch of the robot regardless of the robot's yaw. For the gyro's raw yaw value, use {@code getGyroPitch}.
+
+     * @return A {@link Rotation2d} of the robot's pitch relative to the field.
+     */
+    public Rotation2d getRobotPitch() {
+      // This is probably not the correct way to do this, but it's a close enough approximation
+      double roll = Math.toRadians(m_pigeon.getRoll());
+      double pitch = Math.toRadians(m_pigeon.getPitch());
+      double yaw = Math.toRadians(m_pigeon.getYaw());
+      double theNumber = Math.cos(yaw) * pitch + Math.sin(yaw) * roll;
+      return Rotation2d.fromRadians(theNumber);
+  }
 }

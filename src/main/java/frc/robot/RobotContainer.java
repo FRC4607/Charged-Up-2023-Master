@@ -4,12 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.LedLights;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Auto1;
+import frc.robot.commands.AutoLevel;
 import frc.robot.commands.ChangeLedLights;
 import frc.robot.commands.CloseGripper;
 import frc.robot.commands.MoveToDefault;
@@ -106,6 +108,7 @@ public class RobotContainer {
     //Request game pieces to human player by changing led lights
     m_driverController.a().onTrue(m_ConeRequestLedLights);
     m_driverController.b().onTrue(m_CubeRequestLedLights);
+    SmartDashboard.putData(new AutoLevel(0.125, m_driveTrain));
   }
   
   public Command getAutonomousCommand() {
